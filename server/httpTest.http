@@ -1,0 +1,2 @@
+GET http://localhost:8080/auth/login HTTP/1.1/
+POST https://dummyjson.com/auth/login HTTP/1.1/
