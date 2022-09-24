@@ -12,6 +12,7 @@
   "plugins": ["@typescript-eslint"],
   "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "arrow-parens": ["error", "as-needed"]
+    "arrow-parens": ["error", "as-needed"],
+    "object-curly-newline": "off"
   }
 }
