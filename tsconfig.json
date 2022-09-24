@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "sourceMap": true,
-    "baseUrl": "./",
+    "baseUrl": "src",
     "paths": {}
   }
 }
