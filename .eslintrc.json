@@ -13,6 +13,15 @@
   "extends": ["airbnb-base", "plugin:@typescript-eslint/recommended"],
   "rules": {
     "arrow-parens": ["error", "as-needed"],
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "import/extensions": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".ts", ".d.ts", ".tsx"]
+      }
+    }
   }
 }
