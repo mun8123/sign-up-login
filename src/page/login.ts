@@ -4,6 +4,7 @@ import template from 'page/login.template';
 import TextField from 'components/text-field';
 import Store from 'store';
 import { HttpResponse, LoginResponse, UserProfile } from 'types';
+import { IsTestPassword, IsTestUsername } from 'constant';
 
 const LOGIN_FIELD = '#login-field';
 
@@ -41,6 +42,9 @@ class Login {
       placeholder: '**********',
       required: true,
     });
+
+    idField.addValidateRule(IsTestUsername);
+    passwordField.addValidateRule(IsTestPassword);
 
     this.fields.push(idField);
     this.fields.push(passwordField);

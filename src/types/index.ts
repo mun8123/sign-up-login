@@ -30,3 +30,10 @@ export interface TextFieldData {
   name?: string;
   required: boolean;
 }
+
+export interface ValidateRule {
+  rule: string | RegExp;
+  match: boolean;
+  test?: (text: string) => boolean;
+  message: string;
+}
