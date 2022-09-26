@@ -14,18 +14,21 @@ class Login {
 
   private title: HTMLElement;
 
+  private loginFail: boolean;
+
   private fields: TextField[];
 
   constructor(container: string, private data: { store: Store }) {
     this.container = document.querySelector(container) as HTMLElement;
     this.title = document.querySelector('title') as HTMLElement;
+    this.loginFail = false;
     this.template = template;
     this.fields = [];
   }
 
   private initField = () => {
     const idField = new TextField(LOGIN_FIELD, {
-      id: 'userid',
+      id: 'username',
       label: '아이디',
       type: 'text',
       placeholder: '아이디 입력',
@@ -43,13 +46,14 @@ class Login {
     this.fields.push(passwordField);
   };
 
+  private createLoginData = () =>
+    this.fields
+      .map(field => ({ [field.name]: field.value }))
+      .reduce((prevTexts, text) => ({ ...prevTexts, ...text }), {});
+
   private onSubmit = (e: SubmitEvent) => {
     e.preventDefault();
-
-    const loginData = {
-      username: 'kminchelle',
-      password: '0lelplR',
-    };
+    const loginData = this.createLoginData();
 
     axios
       .post('http://localhost:8080/auth/login', loginData)
@@ -77,7 +81,7 @@ class Login {
 
   render = () => {
     this.title.innerText = '로그인';
-    this.container.innerHTML = this.template({ loginFail: true });
+    this.container.innerHTML = this.template({ loginFail: this.loginFail });
 
     if (this.fields.length === 0) {
       this.initField();
