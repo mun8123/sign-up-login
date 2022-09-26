@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-globals */
 import axios from 'axios';
 import template from 'page/login.template';
+import Store from 'store';
+import { HttpResponse, LoginResponse, UserProfile } from 'types';
 
 class Login {
   private template;
@@ -9,13 +11,13 @@ class Login {
 
   private title: HTMLElement;
 
-  constructor(container: string) {
+  constructor(container: string, private data: { store: Store }) {
     this.container = document.querySelector(container) as HTMLElement;
     this.title = document.querySelector('title') as HTMLElement;
     this.template = template;
   }
 
-  private onSubmit = e => {
+  private onSubmit = (e: SubmitEvent) => {
     e.preventDefault();
 
     const loginData = {
@@ -25,16 +27,19 @@ class Login {
 
     axios
       .post('http://localhost:8080/auth/login', loginData)
-      .then(res => res.data.result)
+      .then((res: HttpResponse<LoginResponse>) => res.data.result)
       .then(({ id, token }) => {
+        this.data.store.token = token;
+
         axios
           .get(`http://localhost:8080/user/${id}`, {
             headers: {
               Authorization: token,
             },
           })
-          .then(res => res.data.result)
-          .then(profile => {
+          .then((res: HttpResponse<UserProfile>) => res.data.result)
+          .then((userProfile: UserProfile) => {
+            this.data.store.userProfile = userProfile;
             location.href = '#profile';
           });
       });
