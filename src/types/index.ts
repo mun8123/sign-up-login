@@ -20,3 +20,13 @@ export interface UserProfile {
   phone: string;
   image: string;
 }
+
+export interface TextFieldData {
+  id: string;
+  text?: string;
+  label: string;
+  type: string;
+  placeholder?: string;
+  name?: string;
+  required: boolean;
+}

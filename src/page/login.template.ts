@@ -4,14 +4,7 @@ const template = `
     <div class="flex flex-col justify-center mx-auto w-2/4 h-screen">
       <div class="flex items-center justify-center px-10 py-12 bg-neutral-50 shadow-lg rounded-3xl">
         <form action="post" id="login-form" class="w-72" >
-          <div class="flex justify-between pb-5">
-            <label for="username-field">아이디</label>
-          <input type="text" id="username-field" class="w-3/4 border border-solid border-gray-800 rounded-md" required>
-          </div>
-          <div class="flex justify-between pb-5">
-            <label for="password-field">비밀번호</label>
-            <input type="text" class="w-3/4 border border-solid border-gray-800 rounded-md" id="password-field" required>
-          </div>
+          <div id="login-field"></div>
           <div class="h-3.5 pb-8">
             {{#if loginFail}}
               <p class="text-xs italic text-red-500 mb-5">아이디 또는 비밀번호가 잘못되었습니다.</p>
