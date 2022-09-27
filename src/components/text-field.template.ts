@@ -8,6 +8,7 @@ const template = `
         type="{{type}}"
         id="{{id}}"
         name="{{name}}"
+        value="{{text}}"
         placeholder="{{placeholder}}"
         {{#if required}}required{{/if}}
       />
