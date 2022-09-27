@@ -5,9 +5,9 @@ const template = `
       <div class="flex items-center justify-center px-10 py-12 bg-neutral-50 shadow-lg rounded-3xl">
         <form action="post" id="login-form" class="w-72" >
           <div id="login-field"></div>
-          <div class="h-3.5 pb-8">
+          <div class="h-3.5 mt-5 mb-3">
             {{#if loginFail}}
-              <p class="text-xs italic text-red-500 mb-5">아이디 또는 비밀번호가 잘못되었습니다.</p>
+              <p class="text-xs italic text-red-500">로그인을 다시 시도해주세요.</p>
             {{/if}}
           </div>
           <div class="pb-5">

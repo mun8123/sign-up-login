@@ -20,11 +20,14 @@ class TextField {
 
   private validateRules: ValidateRule[];
 
+  private valid: ValidateRule | null;
+
   constructor(container: string, data: TextFieldData) {
     this.container = container;
     this.template = template;
     this.data = { ...defaultData, ...data };
     this.validateRules = [];
+    this.valid = null;
   }
 
   get name() {
@@ -35,7 +38,15 @@ class TextField {
     return this.data.text;
   }
 
-  private validate = () => {
+  get isValid() {
+    return !this.valid;
+  }
+
+  clearValid() {
+    this.valid = null;
+  }
+
+  validate = () => {
     const target = this.data.text;
 
     const invalidateRules = this.validateRules.filter(validateRule => {
@@ -52,19 +63,17 @@ class TextField {
       return test(target) !== match;
     });
 
-    return invalidateRules ? invalidateRules[0] : null;
+    this.valid = invalidateRules ? invalidateRules[0] : null;
   };
 
   private buildData = () => {
     if (this.data.text === '') return this.data;
 
-    const valid = this.validate();
-
-    if (valid) {
+    if (this.valid) {
       return {
         ...this.data,
         isNotValid: true,
-        validateMessage: valid.message,
+        validateMessage: this.valid.message,
       };
     }
 

@@ -25,6 +25,9 @@ class Login {
     this.loginFail = false;
     this.template = template;
     this.fields = [];
+
+    this.addEvent();
+    this.initField();
   }
 
   private initField = () => {
@@ -57,7 +60,17 @@ class Login {
 
   private onSubmit = (e: SubmitEvent) => {
     e.preventDefault();
+
     const loginData = this.createLoginData();
+    const isValid = this.fields.some(field => {
+      field.validate();
+      return field.isValid;
+    });
+
+    if (!isValid) {
+      this.render();
+      return;
+    }
 
     axios
       .post('http://localhost:8080/auth/login', loginData)
@@ -86,13 +99,10 @@ class Login {
   render = () => {
     this.title.innerText = '로그인';
     this.container.innerHTML = this.template({ loginFail: this.loginFail });
-
-    if (this.fields.length === 0) {
-      this.initField();
-    }
-
-    this.fields.forEach(field => field.render());
-    this.addEvent();
+    this.fields.forEach(field => {
+      field.render();
+      field.clearValid();
+    });
   };
 }
 
