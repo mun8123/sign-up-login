@@ -4,10 +4,10 @@ import Login from 'page/login';
 
 const ROOT = '#root';
 const store = new Store();
+const login = new Login(ROOT, { store });
 
 const router = () => {
   const path = location.hash.replace('#', '');
-  const login = new Login(ROOT, { store });
 
   switch (path) {
     case '':
