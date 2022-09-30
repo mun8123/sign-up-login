@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import template from 'page/sign-up.template';
 import TextField from 'components/text-field';
 import {
@@ -65,6 +64,7 @@ class SignUp {
     idField.addValidateRule(CantStartNumber);
     idField.addValidateRule(MinimumLengthLimit(3));
     passwordField.addValidateRule(MinimumLengthLimit(6));
+    passwordField.addValidateRule(CantContainWhitespace);
     emailField.addValidateRule(CantContainWhitespace);
 
     this.fields.push(nameField);
@@ -81,10 +81,10 @@ class SignUp {
   private onSubmit = (e: SubmitEvent) => {
     e.preventDefault();
 
-    const isValid = this.fields.some(field => {
+    const isValid = this.fields.reduce((areAllFieldValid, field) => {
       field.validate();
-      return field.isValid;
-    });
+      return areAllFieldValid ? field.isValid : false;
+    }, true);
 
     if (!isValid) {
       this.render();
