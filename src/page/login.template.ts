@@ -3,7 +3,7 @@ import * as Handlebars from 'handlebars';
 const template = `
     <div class="flex flex-col justify-center mx-auto w-2/4 h-screen">
       <div class="flex items-center justify-center px-10 py-12 bg-neutral-50 shadow-lg rounded-3xl">
-        <form action="post" id="login-form" class="w-72" >
+        <form method="post" id="login-form" class="w-72" >
           <div id="login-field"></div>
           <div class="h-3.5 mt-5 mb-3">
             {{#if loginFail}}

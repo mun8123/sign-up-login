@@ -1,5 +1,8 @@
+import axios from 'axios';
 import template from 'page/sign-up.template';
 import TextField from 'components/text-field';
+import { HttpResponse } from 'types';
+
 import {
   CantContainWhitespace,
   CantStartNumber,
@@ -81,6 +84,7 @@ class SignUp {
   private onSubmit = (e: SubmitEvent) => {
     e.preventDefault();
 
+    const signUpData = this.createSignUpData();
     const isValid = this.fields.reduce((areAllFieldValid, field) => {
       field.validate();
       return areAllFieldValid ? field.isValid : false;
@@ -88,7 +92,18 @@ class SignUp {
 
     if (!isValid) {
       this.render();
+      return;
     }
+
+    axios
+      .post('http://localhost:8080/signup', signUpData)
+      .then((res: HttpResponse<number>) => res.data.result)
+      .then(submitted => {
+        this.container.innerHTML = this.template({ submitted });
+      })
+      .catch(error => {
+        console.log(error.response);
+      });
   };
 
   private addEvent = () => {
