@@ -104,6 +104,7 @@ class Login {
     this.fields.forEach(field => {
       field.render();
       field.clearValid();
+      field.initValue();
     });
   };
 }

@@ -119,6 +119,7 @@ class SignUp {
     this.fields.forEach(field => {
       field.render();
       field.clearValid();
+      field.initValue();
     });
   };
 }

@@ -41,9 +41,13 @@ class TextField {
     return !this.valid;
   }
 
-  clearValid() {
+  initValue = () => {
+    this.data.text = '';
+  };
+
+  clearValid = () => {
     this.valid = null;
-  }
+  };
 
   validate = () => {
     const target = this.data.text;
