@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import template from 'components/text-field.template';
 import { TextFieldData, ValidateRule } from 'types';
 
@@ -42,9 +41,13 @@ class TextField {
     return !this.valid;
   }
 
-  clearValid() {
+  initValue = () => {
+    this.data.text = '';
+  };
+
+  clearValid = () => {
     this.valid = null;
-  }
+  };
 
   validate = () => {
     const target = this.data.text;
@@ -52,7 +55,7 @@ class TextField {
     const invalidateRules = this.validateRules.filter(validateRule => {
       const { rule, match } = validateRule;
       const isRegExp = rule instanceof RegExp;
-      const test = isRegExp ? rule.test : validateRule.test;
+      const test = isRegExp ? rule.test.bind(rule) : validateRule.test;
 
       if (!test) {
         throw new Error(
@@ -63,7 +66,7 @@ class TextField {
       return test(target) !== match;
     });
 
-    this.valid = invalidateRules ? invalidateRules[0] : null;
+    this.valid = invalidateRules.length > 0 ? invalidateRules[0] : null;
   };
 
   private buildData = () => {

@@ -64,6 +64,13 @@ app.get('/user/:id', (req, res) => {
     });
 });
 
+app.post('/signup', (req, res) => {
+  res.status(200).send({
+    status: 'OK',
+    result: 1,
+  });
+});
+
 app.listen(app.get('port'), () => {
   console.log(`listen to ${app.get('port')} port`);
 });

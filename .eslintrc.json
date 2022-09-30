@@ -14,7 +14,9 @@
   "rules": {
     "arrow-parens": ["error", "as-needed"],
     "object-curly-newline": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "implicit-arrow-linebreak": "off",
+    "operator-linebreak": "off"
   },
   "settings": {
     "import/resolver": {

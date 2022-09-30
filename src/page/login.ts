@@ -4,7 +4,7 @@ import template from 'page/login.template';
 import TextField from 'components/text-field';
 import Store from 'store';
 import { HttpResponse, LoginResponse, UserProfile } from 'types';
-import { IsTestPassword, IsTestUsername } from 'constant';
+import { IsTestPassword, IsTestUsername } from 'constact/validateRule';
 
 const LOGIN_FIELD = '#login-field';
 
@@ -26,7 +26,6 @@ class Login {
     this.template = template;
     this.fields = [];
 
-    this.addEvent();
     this.initField();
   }
 
@@ -62,10 +61,10 @@ class Login {
     e.preventDefault();
 
     const loginData = this.createLoginData();
-    const isValid = this.fields.some(field => {
+    const isValid = this.fields.reduce((areAllFieldValid, field) => {
       field.validate();
-      return field.isValid;
-    });
+      return areAllFieldValid ? field.isValid : false;
+    }, true);
 
     if (!isValid) {
       this.render();
@@ -93,15 +92,19 @@ class Login {
   };
 
   private addEvent = () => {
-    this.container.addEventListener('submit', this.onSubmit);
+    const loginForm = this.container.querySelector('form') as HTMLElement;
+    loginForm.addEventListener('submit', this.onSubmit);
   };
 
   render = () => {
     this.title.innerText = '로그인';
     this.container.innerHTML = this.template({ loginFail: this.loginFail });
+    this.addEvent();
+
     this.fields.forEach(field => {
       field.render();
       field.clearValid();
+      field.initValue();
     });
   };
 }
