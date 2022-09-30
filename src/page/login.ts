@@ -61,10 +61,10 @@ class Login {
     e.preventDefault();
 
     const loginData = this.createLoginData();
-    const isValid = this.fields.some(field => {
+    const isValid = this.fields.reduce((areAllFieldValid, field) => {
       field.validate();
-      return field.isValid;
-    });
+      return areAllFieldValid ? field.isValid : false;
+    }, true);
 
     if (!isValid) {
       this.render();
