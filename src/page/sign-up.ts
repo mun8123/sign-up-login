@@ -1,13 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import axios from 'axios';
 import template from 'page/sign-up.template';
+import Page from 'page/page';
 import { HttpResponse, SignUpData } from 'types';
 import {
   CantContainWhitespace,
   CantStartNumber,
   MinimumLengthLimit,
 } from 'constact/validateRule';
-import Page from './page';
 
 const REQUIRE_FIELDS = '#required-fields';
 
