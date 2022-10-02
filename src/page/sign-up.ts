@@ -1,8 +1,8 @@
+/* eslint-disable class-methods-use-this */
 import axios from 'axios';
 import template from 'page/sign-up.template';
-import TextField from 'components/text-field';
-import { HttpResponse } from 'types';
-
+import Page from 'page/page';
+import { HttpResponse, SignUpData } from 'types';
 import {
   CantContainWhitespace,
   CantStartNumber,
@@ -11,26 +11,19 @@ import {
 
 const REQUIRE_FIELDS = '#required-fields';
 
-class SignUp {
-  private template;
-
-  private container: HTMLElement;
-
-  private title: HTMLElement;
-
-  private fields: TextField[];
+class SignUp extends Page {
+  private submitted;
 
   constructor(container: string) {
-    this.container = document.querySelector(container) as HTMLElement;
-    this.title = document.querySelector('title') as HTMLElement;
-    this.template = template;
-    this.fields = [];
+    super(container, template, '회원가입', null);
+
+    this.submitted = false;
 
     this.initField();
   }
 
-  private initField = () => {
-    const nameField = new TextField(REQUIRE_FIELDS, {
+  initField = () => {
+    const nameField = this.createField(REQUIRE_FIELDS, {
       id: 'name',
       label: '이름',
       type: 'text',
@@ -38,7 +31,7 @@ class SignUp {
       required: true,
     });
 
-    const idField = new TextField(REQUIRE_FIELDS, {
+    const idField = this.createField(REQUIRE_FIELDS, {
       id: 'id',
       label: '아이디',
       type: 'text',
@@ -46,7 +39,7 @@ class SignUp {
       required: true,
     });
 
-    const emailField = new TextField(REQUIRE_FIELDS, {
+    const emailField = this.createField(REQUIRE_FIELDS, {
       id: 'email',
       label: '이메일',
       type: 'email',
@@ -54,7 +47,7 @@ class SignUp {
       required: true,
     });
 
-    const passwordField = new TextField(REQUIRE_FIELDS, {
+    const passwordField = this.createField(REQUIRE_FIELDS, {
       id: 'password',
       label: '비밀번호',
       type: 'password',
@@ -76,51 +69,19 @@ class SignUp {
     this.fields.push(passwordField);
   };
 
-  private createSignUpData = () =>
-    this.fields
-      .map(field => ({ [field.name]: field.value }))
-      .reduce((prevTexts, text) => ({ ...prevTexts, ...text }), {});
+  buildData = () => ({ submitted: this.submitted });
 
-  private onSubmit = (e: SubmitEvent) => {
-    e.preventDefault();
-
-    const signUpData = this.createSignUpData();
-    const isValid = this.fields.reduce((areAllFieldValid, field) => {
-      field.validate();
-      return areAllFieldValid ? field.isValid : false;
-    }, true);
-
-    if (!isValid) {
-      this.render();
-      return;
-    }
-
+  fetchFunction = (signUpData: SignUpData) => {
     axios
       .post('http://localhost:8080/signup', signUpData)
       .then((res: HttpResponse<number>) => res.data.result)
       .then(submitted => {
-        this.container.innerHTML = this.template({ submitted });
+        this.submitted = !!submitted;
+        this.container.innerHTML = this.template(this.buildData());
       })
       .catch(error => {
         console.log(error.response);
       });
-  };
-
-  private addEvent = () => {
-    const signUpForm = this.container.querySelector('form') as HTMLElement;
-    signUpForm.addEventListener('submit', this.onSubmit);
-  };
-
-  render = () => {
-    this.title.innerText = '회원가입';
-    this.container.innerHTML = this.template({});
-    this.addEvent();
-
-    this.fields.forEach(field => {
-      field.render();
-      field.clearValid();
-      field.initValue();
-    });
   };
 }
 
