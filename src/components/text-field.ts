@@ -1,7 +1,7 @@
 import template from 'components/text-field.template';
 import { TextFieldData, ValidateRule } from 'types';
 
-const defaultData = {
+const defaultData: TextFieldData = {
   id: '',
   label: '',
   text: '',
@@ -50,6 +50,7 @@ class TextField {
   };
 
   validate = () => {
+    if (!this.data.text) return;
     const target = this.data.text;
 
     const invalidateRules = this.validateRules.filter(validateRule => {
