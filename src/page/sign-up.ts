@@ -3,13 +3,13 @@ import axios from 'axios';
 import template from 'page/sign-up.template';
 import Page from 'page/page';
 import TextField from 'components/text-field';
+import AddressField from 'components/address-field';
 import { HttpResponse, SignUpData } from 'types';
 import {
   CantContainWhitespace,
   CantStartNumber,
   MinimumLengthLimit,
 } from 'constact/validateRule';
-import AddressField from 'components/address-field';
 
 const REQUIRE_FIELDS = '#required-fields';
 const OPTIONAL_FIELDS = '#optional-fields';
@@ -80,6 +80,11 @@ class SignUp extends Page {
 
   buildData = () => ({ submitted: this.submitted });
 
+  clearData = () => {
+    this.submitted = false;
+    this.fields.forEach(field => field.initValue());
+  };
+
   fetchFunction = (signUpData: SignUpData) => {
     axios
       .post('http://localhost:8080/signup', signUpData)
@@ -87,6 +92,7 @@ class SignUp extends Page {
       .then(submitted => {
         this.submitted = !!submitted;
         this.container.innerHTML = this.template(this.buildData());
+        this.clearData();
       })
       .catch(error => {
         console.log(error.response);
