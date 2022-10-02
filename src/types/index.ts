@@ -7,9 +7,16 @@ export interface LoginResponse {
   token: string;
 }
 
-export interface LoginRequest {
+export interface LoginData {
   username: string;
   password: string;
+}
+
+export interface SignUpData {
+  name: string;
+  id: string;
+  password: string;
+  email: string;
 }
 
 export interface UserProfile {

@@ -1,43 +1,33 @@
 /* eslint-disable no-restricted-globals */
 import axios from 'axios';
 import template from 'page/login.template';
-import TextField from 'components/text-field';
 import Store from 'store';
-import { HttpResponse, LoginResponse, UserProfile } from 'types';
+import { HttpResponse, LoginData, LoginResponse, UserProfile } from 'types';
 import { IsTestPassword, IsTestUsername } from 'constact/validateRule';
+import Page from './page';
 
 const LOGIN_FIELD = '#login-field';
 
-class Login {
-  private template;
-
-  private container: HTMLElement;
-
-  private title: HTMLElement;
-
+class Login extends Page {
   private loginFail: boolean;
 
-  private fields: TextField[];
+  constructor(container: string, data: { store: Store }) {
+    super(container, template, '로그인', data);
 
-  constructor(container: string, private data: { store: Store }) {
-    this.container = document.querySelector(container) as HTMLElement;
-    this.title = document.querySelector('title') as HTMLElement;
     this.loginFail = false;
-    this.template = template;
-    this.fields = [];
 
     this.initField();
   }
 
-  private initField = () => {
-    const idField = new TextField(LOGIN_FIELD, {
+  initField = () => {
+    const idField = this.createField(LOGIN_FIELD, {
       id: 'username',
       label: '아이디',
       type: 'text',
       placeholder: '아이디 입력',
       required: true,
     });
-    const passwordField = new TextField(LOGIN_FIELD, {
+    const passwordField = this.createField(LOGIN_FIELD, {
       id: 'password',
       label: '비밀번호',
       type: 'password',
@@ -52,29 +42,14 @@ class Login {
     this.fields.push(passwordField);
   };
 
-  private createLoginData = () =>
-    this.fields
-      .map(field => ({ [field.name]: field.value }))
-      .reduce((prevTexts, text) => ({ ...prevTexts, ...text }), {});
+  buildData = () => ({ loginFail: this.loginFail });
 
-  private onSubmit = (e: SubmitEvent) => {
-    e.preventDefault();
-
-    const loginData = this.createLoginData();
-    const isValid = this.fields.reduce((areAllFieldValid, field) => {
-      field.validate();
-      return areAllFieldValid ? field.isValid : false;
-    }, true);
-
-    if (!isValid) {
-      this.render();
-      return;
-    }
-
+  fetchFunction = (loginData: LoginData) => {
     axios
       .post('http://localhost:8080/auth/login', loginData)
       .then((res: HttpResponse<LoginResponse>) => res.data.result)
       .then(({ id, token }) => {
+        if (!this.data) return;
         this.data.store.token = token;
 
         axios
@@ -85,27 +60,11 @@ class Login {
           })
           .then((res: HttpResponse<UserProfile>) => res.data.result)
           .then((userProfile: UserProfile) => {
+            if (!this.data) return;
             this.data.store.userProfile = userProfile;
             location.href = '#profile';
           });
       });
-  };
-
-  private addEvent = () => {
-    const loginForm = this.container.querySelector('form') as HTMLElement;
-    loginForm.addEventListener('submit', this.onSubmit);
-  };
-
-  render = () => {
-    this.title.innerText = '로그인';
-    this.container.innerHTML = this.template({ loginFail: this.loginFail });
-    this.addEvent();
-
-    this.fields.forEach(field => {
-      field.render();
-      field.clearValid();
-      field.initValue();
-    });
   };
 }
 
