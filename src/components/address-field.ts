@@ -44,15 +44,22 @@ class AddressField {
     }).open();
   };
 
+  private onChange = (e: Event) => {
+    const { value } = <HTMLInputElement>e.target;
+    this.data.text = `${this.data.text} ${value.trim()}`;
+  };
+
   render = () => {
     const container = document.querySelector(this.container) as HTMLElement;
     container.insertAdjacentHTML('beforeend', this.template({}));
     const searchAddressButton = container.querySelector(
       '#search-address',
     ) as HTMLElement;
+
     searchAddressButton.addEventListener('click', () =>
       this.onClick(container),
     );
+    container.addEventListener('change', this.onChange);
   };
 }
 
