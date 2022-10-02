@@ -1,7 +1,8 @@
+/* eslint-disable consistent-return */
 /* eslint-disable class-methods-use-this */
 import Store from 'store';
 import TextField from 'components/text-field';
-import { TextFieldData } from 'types';
+import AddressField from 'components/address-field';
 
 abstract class Page {
   protected template;
@@ -10,7 +11,7 @@ abstract class Page {
 
   private titleElement: HTMLElement;
 
-  protected fields: TextField[];
+  protected fields: (TextField | AddressField)[];
 
   constructor(
     container: string,
@@ -24,29 +25,24 @@ abstract class Page {
     this.fields = [];
   }
 
-  protected createField = (
-    container: string,
-    { id, label, type, placeholder, required }: TextFieldData,
-  ) =>
-    new TextField(container, {
-      id,
-      label,
-      type,
-      placeholder,
-      required,
-    });
-
   protected abstract initField(): void;
 
   private validateFields = () =>
     this.fields.reduce((areAllFieldValid, field) => {
+      if (!(field instanceof TextField)) {
+        return areAllFieldValid;
+      }
+
       field.validate();
       return areAllFieldValid ? field.isValid : false;
     }, true);
 
   private createSubmitData = () =>
     this.fields
-      .map(field => ({ [field.name]: field.value }))
+      .map(field => {
+        if (!(field instanceof TextField)) return;
+        return { [field.name]: field.value };
+      })
       .reduce((prevTexts, text) => ({ ...prevTexts, ...text }), {});
 
   protected abstract fetchFunction(submitData: object): void;
@@ -63,7 +59,9 @@ abstract class Page {
     }
 
     const submitData = this.createSubmitData();
-    this.fetchFunction(submitData);
+    if (submitData) {
+      this.fetchFunction(submitData);
+    }
   };
 
   private addEvent = () => {
@@ -78,8 +76,10 @@ abstract class Page {
 
     this.fields.forEach(field => {
       field.render();
-      field.clearValid();
-      field.initValue();
+      if (field instanceof TextField) {
+        field.clearValid();
+        field.initValue();
+      }
     });
   };
 }

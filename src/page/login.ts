@@ -2,9 +2,10 @@
 import axios from 'axios';
 import template from 'page/login.template';
 import Store from 'store';
+import TextField from 'components/text-field';
+import Page from 'page/page';
 import { HttpResponse, LoginData, LoginResponse, UserProfile } from 'types';
 import { IsTestPassword, IsTestUsername } from 'constact/validateRule';
-import Page from './page';
 
 const LOGIN_FIELD = '#login-field';
 
@@ -20,14 +21,14 @@ class Login extends Page {
   }
 
   initField = () => {
-    const idField = this.createField(LOGIN_FIELD, {
+    const idField = new TextField(LOGIN_FIELD, {
       id: 'username',
       label: '아이디',
       type: 'text',
       placeholder: '아이디 입력',
       required: true,
     });
-    const passwordField = this.createField(LOGIN_FIELD, {
+    const passwordField = new TextField(LOGIN_FIELD, {
       id: 'password',
       label: '비밀번호',
       type: 'password',

@@ -2,14 +2,17 @@
 import axios from 'axios';
 import template from 'page/sign-up.template';
 import Page from 'page/page';
+import TextField from 'components/text-field';
 import { HttpResponse, SignUpData } from 'types';
 import {
   CantContainWhitespace,
   CantStartNumber,
   MinimumLengthLimit,
 } from 'constact/validateRule';
+import AddressField from 'components/address-field';
 
 const REQUIRE_FIELDS = '#required-fields';
+const OPTIONAL_FIELDS = '#optional-fields';
 
 class SignUp extends Page {
   private submitted;
@@ -23,7 +26,7 @@ class SignUp extends Page {
   }
 
   initField = () => {
-    const nameField = this.createField(REQUIRE_FIELDS, {
+    const nameField = new TextField(REQUIRE_FIELDS, {
       id: 'name',
       label: '이름',
       type: 'text',
@@ -31,7 +34,7 @@ class SignUp extends Page {
       required: true,
     });
 
-    const idField = this.createField(REQUIRE_FIELDS, {
+    const idField = new TextField(REQUIRE_FIELDS, {
       id: 'id',
       label: '아이디',
       type: 'text',
@@ -39,7 +42,7 @@ class SignUp extends Page {
       required: true,
     });
 
-    const emailField = this.createField(REQUIRE_FIELDS, {
+    const emailField = new TextField(REQUIRE_FIELDS, {
       id: 'email',
       label: '이메일',
       type: 'email',
@@ -47,12 +50,17 @@ class SignUp extends Page {
       required: true,
     });
 
-    const passwordField = this.createField(REQUIRE_FIELDS, {
+    const passwordField = new TextField(REQUIRE_FIELDS, {
       id: 'password',
       label: '비밀번호',
       type: 'password',
       placeholder: '비밀번호를 입력해주세요',
       required: true,
+    });
+
+    const addressField = new AddressField(OPTIONAL_FIELDS, {
+      id: 'address',
+      label: '주소',
     });
 
     nameField.addValidateRule(CantContainWhitespace);
@@ -67,6 +75,7 @@ class SignUp extends Page {
     this.fields.push(idField);
     this.fields.push(emailField);
     this.fields.push(passwordField);
+    this.fields.push(addressField);
   };
 
   buildData = () => ({ submitted: this.submitted });

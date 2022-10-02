@@ -28,15 +28,20 @@ export interface UserProfile {
   image: string;
 }
 
-export interface TextFieldData {
+export interface FieldData {
   id: string;
-  text?: string;
   label: string;
+  required?: boolean;
+  text?: string;
+}
+
+export interface TextFieldData extends FieldData {
   type: string;
   placeholder?: string;
   name?: string;
-  required: boolean;
 }
+
+export type AddressFieldData = FieldData;
 
 export interface ValidateRule {
   rule: string | RegExp;
