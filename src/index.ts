@@ -5,6 +5,12 @@ import PageNotFound from 'page/page-not-fount';
 import Profile from 'page/profile';
 import SignUp from 'page/sign-up';
 
+declare global {
+  interface Window {
+    daum: any;
+  }
+}
+
 const ROOT = '#root';
 const store = new Store();
 const login = new Login(ROOT, { store });

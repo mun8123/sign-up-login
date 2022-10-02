@@ -49,3 +49,8 @@ export interface ValidateRule {
   test?: (text: string) => boolean;
   message: string;
 }
+
+export type DaumAddress = {
+  roadAddress: string;
+  sigunguCode: string;
+};

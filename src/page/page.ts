@@ -40,7 +40,7 @@ abstract class Page {
   private createSubmitData = () =>
     this.fields
       .map(field => {
-        if (!(field instanceof TextField)) return;
+        if (!field.value) return {};
         return { [field.name]: field.value };
       })
       .reduce((prevTexts, text) => ({ ...prevTexts, ...text }), {});

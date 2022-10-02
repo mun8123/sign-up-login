@@ -22,9 +22,37 @@ class AddressField {
     this.data = { ...defaultData, ...data };
   }
 
+  get name() {
+    return this.data.id;
+  }
+
+  get value() {
+    return this.data.text;
+  }
+
+  private onClick = (container: HTMLElement) => {
+    new window.daum.Postcode({
+      oncomplete: (data: DaumAddress) => {
+        const { roadAddress, sigunguCode } = data;
+
+        const addressBaseElement = container.querySelector(
+          '#address-base',
+        ) as HTMLInputElement;
+        this.data.text = `(${sigunguCode}) ${roadAddress}`;
+        addressBaseElement.value = `(${sigunguCode}) ${roadAddress}`;
+      },
+    }).open();
+  };
+
   render = () => {
     const container = document.querySelector(this.container) as HTMLElement;
     container.insertAdjacentHTML('beforeend', this.template({}));
+    const searchAddressButton = container.querySelector(
+      '#search-address',
+    ) as HTMLElement;
+    searchAddressButton.addEventListener('click', () =>
+      this.onClick(container),
+    );
   };
 }
 
